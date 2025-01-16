@@ -40,6 +40,24 @@ Set up a [virtual environment (venv)](https://medium.com/@KiranMohan27/how-to-cr
 
 Make sure you can run the following command for the venv: `pip install mlx mlx_lm`
 
+#### Vector DB
+
+You'll need a vector database. Chroma is probably the easiest way to start. For Apple Silicon Macs (M1, M2, M3, M4), installing and using Chroma is generally straightforward, but there are a few considerations:
+
+1. Ensure you have Python 3.7 or later installed on your Mac.
+
+3. Install Chroma using pip:
+
+```bash
+pip install chromadb
+```
+
+3. If you encounter any issues, try installing Xcode Command Line Tools first:
+
+```bash
+xcode-select --install
+```
+
 ## Case 1: Primary host on Windows
 
 TBD
