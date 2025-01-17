@@ -46,7 +46,7 @@ You'll need a vector database. Chroma is probably the easiest way to start. For 
 
 1. Ensure you have Python 3.7 or later installed on your Mac.
 
-3. Install Chroma using pip:
+2. Install Chroma using pip:
 
 ```bash
 pip install chromadb
@@ -58,11 +58,72 @@ pip install chromadb
 xcode-select --install
 ```
 
-## Case 1: Primary host on Windows
+## Case 2: Primary host on Windows
 
-TBD
+### Suggested approach
 
-## Case 1: Primary host on Linux
+Use [Ollama](https://github.com/ollama/ollama)
+
+**Basic Usage**:
+```bash
+# Run basic model
+ollama run llama2
+```
+
+### Suggested prep
+
+Make sure you have a 3.10 or more recent Python environemnt. For Windows users, there are several robust options for setting up a Python development environment.
+
+**Option 1: Microsoft Store Installation**
+
+The simplest method for beginners is installing Python through the Microsoft Store:
+
+1. **Simple Installation Process**: 
+   - Open Microsoft Store
+   - Search for "Python"
+   - Select latest version from Python Software Foundation
+   - Click "Get" to install
+
+2. **Key Benefits**:
+   - Automatic PATH configuration
+   - No admin rights needed
+   - Pre-installed pip package manager
+   - Automatic updates
+   - Includes IDLE development environment
+
+**Option 2: Traditional Windows Installation**
+
+For more control over the installation:
+
+1. **Download Python**:
+   - Visit python.org
+   - Download latest Windows installer (64-bit)
+   - Run the executable
+   - Enable "Add python.exe to PATH"
+   - Click "Install Now"
+
+2. **Virtual Environment Setup**:
+```bash
+# Create virtual environment
+python -m venv ailab
+
+# Activate environment
+ailab\Scripts\activate
+```
+
+#### Vector DB
+
+You'll need a vector database. Chroma is probably the easiest way to start.
+
+1. Ensure you have Python 3.7 or later installed.
+
+2. Install Chroma using pip:
+
+```bash
+pip install chromadb
+```
+
+## Case 3: Primary host on Linux
 
 Primary host on a Linux laptop, preferably with a modern GPU, though you can use CPU-only, which will be much slower.
 
