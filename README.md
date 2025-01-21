@@ -22,6 +22,8 @@ We recommend prepping for an AI Lab session by doing the following:
 * Review and better yet install any mentioned tools
 * Think of some simple, real-life problem you've encountered where GenAI could help
 
+You'll want a good text editor, perhaps with AI assistance ([VS Code + CoPilot](https://code.visualstudio.com/), [Zed](https://zed.dev/), [Cursor](https://www.cursor.com/), [Pearai](https://trypear.ai/), etc.) is also helpful.
+
 ## Case 1: Mac
 
 Primary host on M1/M2/M3/M4 MacBook with at least 8GB RAM, and ideally 16GB
