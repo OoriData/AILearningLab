@@ -46,7 +46,7 @@ Make sure you can run the following command for the venv: `pip install mlx mlx_l
 
 You'll need a vector database. Chroma is probably the easiest way to start. For Apple Silicon Macs (M1, M2, M3, M4), installing and using Chroma is generally straightforward, but there are a few considerations:
 
-1. Ensure you have Python 3.7 or later installed on your Mac.
+1. Ensure you have Python 3.12 or later installed on your Mac.
 
 2. Install Chroma using pip:
 
@@ -117,7 +117,7 @@ ailab\Scripts\activate
 
 You'll need a vector database. Chroma is probably the easiest way to start.
 
-1. Ensure you have Python 3.7 or later installed.
+1. Ensure you have Python 3.12 or later installed.
 
 2. Install Chroma using pip:
 
@@ -135,7 +135,7 @@ Use [Ollama](https://github.com/ollama/ollama)
 
 ### Suggested prep
 
-Make sure you have a 3.10 or more recent Python environemnt.
+Make sure you have a 3.12 or more recent Python environemnt.
 
 Set up a [virtual environment (venv)](https://medium.com/@KiranMohan27/how-to-create-a-virtual-environment-in-python-be4069ad1efa). A good name for this is `ailab`
 
@@ -158,3 +158,7 @@ Test that you can launch it:
 ```sh
 open-webui serve
 ```
+
+# Typical project: Building a Simple Resume RAG Tool with Python, Ollama, ChromaDB, and Quart
+
+For details on doing this project in your private, local environment (e.g. entirely on your laptop), [start here](https://github.com/OoriData/AILearningLab/tree/main/resume_rag)
