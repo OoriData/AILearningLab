@@ -1,6 +1,6 @@
-# app.py
 import asyncio
 import os
+import argparse
 from pypdf import PdfReader
 import chromadb
 from chromadb.config import Settings
@@ -8,9 +8,15 @@ import httpx
 from quart import Quart, request, jsonify, render_template
 import aiofiles
 
+# Parse command line arguments
+parser = argparse.ArgumentParser(description='Run the RAG application')
+parser.add_argument('--debug', action='store_true', help='Enable debug mode to show complete prompts')
+args = parser.parse_args()
+
 # Initialize Quart app
 app = Quart(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['DEBUG_MODE'] = args.debug
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Initialize ChromaDB variables
@@ -109,6 +115,11 @@ async def add_chunks_to_chroma(collection, chunks):
 # Ollama Functions
 async def query_ollama(prompt, model="llama2"):
     """Query Ollama API asynchronously."""
+    if app.config['DEBUG_MODE']:
+        print("\n===== OLLAMA PROMPT =====")
+        print(prompt)
+        print("========================\n")
+        
     async with httpx.AsyncClient() as client:
         response = await client.post(
             # "http://localhost:11434/api/generate",
@@ -125,6 +136,11 @@ async def query_ollama(prompt, model="llama2"):
 # LM Studio Functions
 async def query_lm_studio(prompt, model=None):
     """Query LM Studio API asynchronously."""
+    if app.config['DEBUG_MODE']:
+        print("\n===== LM STUDIO PROMPT =====")
+        print(prompt)
+        print("============================\n")
+        
     async with httpx.AsyncClient() as client:
         # Set the base URL for LM Studio
         base_url = "http://localhost:1234/v1"
@@ -141,6 +157,12 @@ async def query_lm_studio(prompt, model=None):
             messages = [
                 {"role": "user", "content": prompt},
             ]
+        
+        # Debug the actual messages being sent
+        if app.config['DEBUG_MODE']:
+            print("Messages being sent to LM Studio:")
+            for msg in messages:
+                print(f"Role: {msg['role']}, Content: {msg['content'][:100]}...")
         
         response = await client.post(
             f"{base_url}/chat/completions",
@@ -187,7 +209,8 @@ async def process_rag_query(query, collection, model="llama2"):
     
     return {
         "response": response,
-        "sources": chunk_sources
+        "sources": chunk_sources,
+        "prompt": prompt if app.config['DEBUG_MODE'] else None
     }
 
 # Quart Routes
@@ -205,10 +228,11 @@ async def index():
 @app.route('/upload', methods=['POST'])
 async def upload_file():
     """Handle file upload."""
-    if 'file' not in request.files:
+    files = await request.files
+    
+    if 'file' not in files:
         return jsonify({"error": "No file part"}), 400
     
-    files = await request.files
     uploaded_files = files.getlist('file')
     
     for file in uploaded_files:
@@ -235,4 +259,6 @@ async def chat():
     return jsonify(result)
 
 if __name__ == '__main__':
+    if app.config['DEBUG_MODE']:
+        print("Debug mode enabled - prompts will be displayed")
     app.run(debug=True)
