@@ -2,7 +2,7 @@
 
 Make sure you have Python 3.12+ & Ollama installed, as in the main README, then set up a virtual environment:
 
-### Creating a Virtual Environment
+## Creating a Virtual Environment
 
 First, open a terminal or command prompt and navigate to your project directory. Run the following commands to create and activate a virtual environment:
 
@@ -17,6 +17,17 @@ source resume_rag_venv/bin/activate
 # resume_rag_venv\Scripts\activate
 ```
 
+## Run the code
+
+```sh
+python resume_rag_main.py
+```
+
+If you're not getting great responses from your LLM you can get some debug traces as follows, though it may take a bit of a practiced eye to apply what it shows:
+
+```sh
+python resume_rag_main.py --debug 
+```
 
 ---
 
