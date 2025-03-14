@@ -1,0 +1,162 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple RAG Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .chat-container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .user-message {
+            background-color: #e6f7ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .ai-message {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .sources {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+        .input-container {
+            display: flex;
+        }
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+        }
+        .upload-container {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px dashed #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple RAG Chat</h1>
+    
+    <div class="chat-container" id="chat-container"></div>
+    
+    <div class="input-container">
+        <input type="text" id="user-input" placeholder="Ask a question...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    
+    <div class="upload-container">
+        <h2>Upload Documents</h2>
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".pdf" multiple>
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+    
+    <script>
+        // Handle file upload
+        document.getElementById('upload-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            alert(result.message || result.error);
+        });
+        
+        // Handle chat
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const chatContainer = document.getElementById('chat-container');
+            
+            const message = userInput.value.trim();
+            if (!message) return;
+            
+            // Display user message
+            const userMessageElement = document.createElement('div');
+            userMessageElement.className = 'user-message';
+            userMessageElement.textContent = message;
+            chatContainer.appendChild(userMessageElement);
+            
+            // Clear input
+            userInput.value = '';
+            
+            // Display loading message
+            const loadingElement = document.createElement('div');
+            loadingElement.className = 'ai-message';
+            loadingElement.textContent = 'Thinking...';
+            chatContainer.appendChild(loadingElement);
+            
+            try {
+                // Send chat request
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ query: message })
+                });
+                
+                const result = await response.json();
+                
+                // Remove loading message
+                chatContainer.removeChild(loadingElement);
+                
+                // Display AI response
+                const aiMessageElement = document.createElement('div');
+                aiMessageElement.className = 'ai-message';
+                aiMessageElement.textContent = result.response;
+                
+                // Display sources if available
+                if (result.sources && result.sources.length > 0) {
+                    const sourcesElement = document.createElement('div');
+                    sourcesElement.className = 'sources';
+                    sourcesElement.textContent = 'Sources: ' + result.sources.join(', ');
+                    aiMessageElement.appendChild(sourcesElement);
+                }
+                
+                chatContainer.appendChild(aiMessageElement);
+            } catch (error) {
+                console.error('Error:', error);
+                chatContainer.removeChild(loadingElement);
+                
+                const errorElement = document.createElement('div');
+                errorElement.className = 'ai-message';
+                errorElement.textContent = 'Error: Could not get a response.';
+                chatContainer.appendChild(errorElement);
+            }
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        // Allow sending message with Enter key
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
